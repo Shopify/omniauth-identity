@@ -133,6 +133,7 @@ module OmniAuth
             id_token_hint: options.id_token_hint,
             login_hint: options.login_hint,
             ux: options.ux,
+            ui_locales: options.ui_locales,
         }
         client.authorization_uri(opts.reject{|k,v| v.nil?})
       end
