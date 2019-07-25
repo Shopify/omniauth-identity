@@ -79,6 +79,15 @@ class OmniAuth::Strategies::OpenIDConnectTest < StrategyTestCase
     strategy.request_phase
   end
 
+  def test_request_phase_with_http
+    expected_redirect = /^http:\/\/.*$/
+    strategy.options.client_options.scheme = 'http'
+    strategy.options.issuer = 'example.com'
+    strategy.options.client_options.host = 'example.com'
+    strategy.expects(:redirect).with(regexp_matches(expected_redirect))
+    strategy.request_phase
+  end
+
   def test_uid
     assert_equal user_info.sub, strategy.uid
   end
