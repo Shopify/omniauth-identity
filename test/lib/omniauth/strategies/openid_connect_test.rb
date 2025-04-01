@@ -71,7 +71,7 @@ class OmniAuth::Strategies::OpenIDConnectTest < StrategyTestCase
   end
   
   def test_request_phase_with_ui_locales
-    expected_redirect = /^https:\/\/example\.com\/authorize\?client_id=1234&nonce=[\w\d]{32}&response_type=code&scope=openid&state=[\w\d]{32}&ui_locales=fr\+en$/
+    expected_redirect = /^https:\/\/example\.com\/authorize\?client_id=1234&nonce=[\w\d]{32}&response_type=code&scope=openid&state=[\w\d]{32}&ui_locales=fr%20en$/
     strategy.options.ui_locales = 'fr en'
     strategy.options.issuer = 'example.com'
     strategy.options.client_options.host = 'example.com'
@@ -95,7 +95,7 @@ class OmniAuth::Strategies::OpenIDConnectTest < StrategyTestCase
     strategy.options.client_jwk_signing_key = File.read('test/fixtures/jwks.json')
 
     id_token = stub('OpenIDConnect::ResponseObject::IdToken')
-    id_token.stubs(:verify!).with({:issuer => strategy.options.issuer, :client_id => @identifier, :nonce => nonce}).returns(true)
+    id_token.stubs(:verify!).with(issuer: strategy.options.issuer, client_id: @identifier, nonce: nonce).returns(true)
     ::OpenIDConnect::ResponseObject::IdToken.stubs(:decode).returns(id_token)
 
     strategy.unstub(:user_info)
@@ -138,7 +138,7 @@ class OmniAuth::Strategies::OpenIDConnectTest < StrategyTestCase
     ::OpenIDConnect::Discovery::Provider::Config.stubs(:discover!).with('https://example.com/', {}).returns(config)
 
     id_token = stub('OpenIDConnect::ResponseObject::IdToken')
-    id_token.stubs(:verify!).with({:issuer => 'https://example.com/', :client_id => @identifier, :nonce => nonce}).returns(true)
+    id_token.stubs(:verify!).with(issuer: 'https://example.com/', client_id: @identifier, nonce: nonce).returns(true)
     ::OpenIDConnect::ResponseObject::IdToken.stubs(:decode).returns(id_token)
 
     strategy.unstub(:user_info)
@@ -338,14 +338,13 @@ class OmniAuth::Strategies::OpenIDConnectTest < StrategyTestCase
     strategy.call!({'rack.session' => {'omniauth.state' => state, 'omniauth.nonce' => nonce}})
 
     id_token = stub('OpenIDConnect::ResponseObject::IdToken')
-    id_token.stubs(:verify!).with({:issuer => strategy.options.issuer, :client_id => @identifier, :nonce => nonce}).returns(true)
+    id_token.stubs(:verify!).with(issuer: strategy.options.issuer, client_id: @identifier, nonce: nonce).returns(true)
     ::OpenIDConnect::ResponseObject::IdToken.stubs(:decode).returns(id_token)
 
-    HTTPClient.any_instance.stubs(:post).with(
-      "#{opts.scheme}://#{opts.host}:#{opts.port}#{opts.token_endpoint}",
-      {scope: 'openid', :grant_type => :client_credentials, :client_id => @identifier, :client_secret => @secret},
-      {}
-    ).returns(success)
+    access_token = stub('OpenIDConnect::AccessToken')
+    access_token.stubs(:access_token).returns('test_access_token')
+    access_token.stubs(:id_token).returns(File.read('test/fixtures/id_token.txt'))
+    client.expects(:access_token!).at_least_once.returns(access_token)
 
     assert(strategy.send :access_token)
   end

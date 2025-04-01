@@ -6,14 +6,14 @@ require 'coveralls'
 Coveralls.wear!
 
 require 'minitest/autorun'
-require 'mocha/mini_test'
+require 'mocha/minitest'
 require 'faker'
 require 'active_support'
 require_relative '../lib/omniauth-openid-connect'
 
 OmniAuth.config.test_mode = true
 
-class StrategyTestCase < MiniTest::Test
+class StrategyTestCase < Minitest::Test
   class DummyApp
     def call(env); end
   end
@@ -52,6 +52,8 @@ class StrategyTestCase < MiniTest::Test
       request.stubs(:env).returns({})
       request.stubs(:scheme).returns({})
       request.stubs(:ssl?).returns(false)
+      request.stubs(:path_info).returns('')
+      request.stubs(:path).returns('')
     end
   end
 

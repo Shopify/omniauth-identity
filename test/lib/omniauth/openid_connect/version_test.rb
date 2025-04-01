@@ -1,6 +1,6 @@
 require_relative '../../../test_helper'
 
-class OmniAuth::OpenIDConnect::VersionTest < MiniTest::Test
+class OmniAuth::OpenIDConnect::VersionTest < Minitest::Test
   def test_version_defined
     refute_nil OmniAuth::OpenIDConnect::VERSION
   end
