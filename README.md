@@ -1,5 +1,11 @@
 # OmniAuth::OpenIDConnect
 
+> **No longer maintained**
+>
+> This Shopify fork is no longer maintained and will not receive updates or security fixes.
+> Use [omniauth/omniauth_openid_connect](https://github.com/omniauth/omniauth_openid_connect)
+> instead, and refer to that project's documentation for installation and usage.
+
 OpenID Connect strategy for OmniAuth
 [![Gem Version](https://badge.fury.io/rb/omniauth-openid-connect.png)](http://badge.fury.io/rb/omniauth-openid-connect)
 [![Build Status](https://travis-ci.org/jjbohn/omniauth-openid-connect.png?branch=master)](https://travis-ci.org/jjbohn/omniauth-openid-connect)
